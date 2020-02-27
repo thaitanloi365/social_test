@@ -36,7 +36,8 @@ target 'social_tests' do
     
 
   pod 'Firebase/Auth'
-  
+  pod 'Firebase/Messaging'
+   
   target 'social_testsTests' do
     inherit! :search_paths
     # Pods for testing
