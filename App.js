@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   View,
   Button,
@@ -14,12 +14,11 @@ import {
 } from 'react-native';
 
 import firebase from 'react-native-firebase';
-import { Header } from 'react-native/Libraries/NewAppScreen';
-import { AccessToken, LoginManager } from 'react-native-fbsdk';
-import { GoogleSignin } from '@react-native-community/google-signin';
+import {Header} from 'react-native/Libraries/NewAppScreen';
+import {AccessToken, LoginManager} from 'react-native-fbsdk';
+import {GoogleSignin} from '@react-native-community/google-signin';
 import * as Keychain from 'react-native-keychain';
 import TouchID from 'react-native-touch-id';
-
 
 const optionalConfigObject = {
   title: 'Authentication Required', // Android
@@ -55,7 +54,7 @@ export default class App extends Component {
   componentDidMount() {
     TouchID.isSupported()
       .then(biometryType => {
-        this.setState({ biometryType });
+        this.setState({biometryType});
         console.log('biometryType', biometryType);
         return this.loginWithBio();
       })
@@ -73,7 +72,7 @@ export default class App extends Component {
 
     this.unsubscribe = firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.setState({ user: user.toJSON() });
+        this.setState({user: user.toJSON()});
       } else {
         // User has been signed out, reset the state
         this.setState({
@@ -92,7 +91,7 @@ export default class App extends Component {
       .currentUser?.getIdTokenResult(true)
       .then(tokeId => {
         console.log('token id: ', tokeId.token);
-        this.setState({ tokenId: tokeId.token });
+        this.setState({tokenId: tokeId.token});
       })
       .catch(error => {
         console.log('*** error', error);
@@ -108,34 +107,44 @@ export default class App extends Component {
         return null;
       })
       .then(response => {
-        return firebase.messaging().getToken()
-      }).then(token => {
+        return firebase.messaging().getToken();
+      })
+      .then(token => {
         console.log('*** token', token);
-      }).catch(error => {
+      })
+      .catch(error => {
         console.log('*** error', error);
       });
 
-    this.messageListener = firebase
+    this.checkinTopicListener = firebase
       .messaging()
-      .onMessage((message) => {
-        const data = message._data
-        const notificationId = message._messageId
+      .subscribeToTopic('/checkin/visitor');
 
-        if (data) {
-          const { _title: title, _message: body, ...payload } = data
-          const notification = new firebase.notifications.Notification().setNotificationId(notificationId)
-            .setSound('default')
-            .setTitle(title)
-            .setBody(body)
-            .setData(payload)
+    this.messageListener = firebase.messaging().onMessage(message => {
+      const data = message._data;
+      const notificationId = message._messageId;
 
-          firebase.notifications().displayNotification(notification).then(response => {
-            console.log("*** response", response)
-          }).catch(error => {
-            console.log("*** error", error)
+      console.log('*** onMessage', message);
+      if (data) {
+        const {_title: title, _message: body, ...payload} = data;
+        const notification = new firebase.notifications.Notification()
+          .setNotificationId(notificationId)
+          .setSound('default')
+          .setTitle(title)
+          .setBody(body)
+          .setData(payload);
+
+        firebase
+          .notifications()
+          .displayNotification(notification)
+          .then(response => {
+            console.log('*** response', response);
+          })
+          .catch(error => {
+            console.log('*** error', error);
           });
-        }
-      });
+      }
+    });
   }
 
   componentWillUnmount() {
@@ -143,6 +152,7 @@ export default class App extends Component {
       this.unsubscribe();
     }
     this.messageListener();
+    this.checkinTopicListener();
   }
 
   loginWithBio = () => {
@@ -154,7 +164,7 @@ export default class App extends Component {
             creds.password,
             creds,
           );
-          this.setState({ creds });
+          this.setState({creds});
         } else {
           console.log('No credentials stored');
           const err = Error('No credentials stored');
@@ -195,7 +205,7 @@ export default class App extends Component {
       })
       .then(tokeId => {
         console.log('token id: ', tokeId.token);
-        this.setState({ tokenId: tokeId.token });
+        this.setState({tokenId: tokeId.token});
       })
       .catch(error => {
         console.log(error, error.code, error.data);
@@ -204,7 +214,7 @@ export default class App extends Component {
 
   googleLogin = () => {
     GoogleSignin.signIn()
-      .then(({ accessToken, idToken }) => {
+      .then(({accessToken, idToken}) => {
         return firebase.auth.GoogleAuthProvider.credential(
           idToken,
           accessToken,
@@ -219,21 +229,21 @@ export default class App extends Component {
       })
       .then(tokeId => {
         console.log('token id: ', tokeId.token);
-        this.setState({ tokenId: tokeId.token });
+        this.setState({tokenId: tokeId.token});
       })
       .catch(error => {
         console.log(error);
       });
   };
   phoneLogin = () => {
-    const { phoneNumber } = this.state;
-    this.setState({ message: 'Sending code ...' });
+    const {phoneNumber} = this.state;
+    this.setState({message: 'Sending code ...'});
 
     firebase
       .auth()
       .signInWithPhoneNumber(phoneNumber)
       .then(confirmResult =>
-        this.setState({ confirmResult, message: 'Code has been sent!' }),
+        this.setState({confirmResult, message: 'Code has been sent!'}),
       )
       .catch(error =>
         this.setState({
@@ -243,16 +253,16 @@ export default class App extends Component {
   };
 
   confirmCode = () => {
-    const { codeInput, confirmResult } = this.state;
+    const {codeInput, confirmResult} = this.state;
 
     if (confirmResult && codeInput.length) {
       confirmResult
         .confirm(codeInput)
         .then(user => {
-          this.setState({ message: 'Code Confirmed!' });
+          this.setState({message: 'Code Confirmed!'});
         })
         .catch(error =>
-          this.setState({ message: `Code Confirm Error: ${error.message}` }),
+          this.setState({message: `Code Confirm Error: ${error.message}`}),
         );
     }
   };
@@ -262,15 +272,15 @@ export default class App extends Component {
   };
 
   renderPhoneNumberInput() {
-    const { phoneNumber } = this.state;
+    const {phoneNumber} = this.state;
 
     return (
-      <View style={{ padding: 25 }}>
+      <View style={{padding: 25}}>
         <Text>Enter phone number:</Text>
         <TextInput
           autoFocus
-          style={{ height: 40, marginTop: 15, marginBottom: 15 }}
-          onChangeText={value => this.setState({ phoneNumber: value })}
+          style={{height: 40, marginTop: 15, marginBottom: 15}}
+          onChangeText={value => this.setState({phoneNumber: value})}
           placeholder={'Phone number ... '}
           value={phoneNumber}
         />
@@ -280,29 +290,29 @@ export default class App extends Component {
   }
 
   renderMessage() {
-    const { message } = this.state;
+    const {message} = this.state;
 
     if (!message.length) {
       return null;
     }
 
     return (
-      <Text style={{ padding: 5, backgroundColor: '#000', color: '#fff' }}>
+      <Text style={{padding: 5, backgroundColor: '#000', color: '#fff'}}>
         {message}
       </Text>
     );
   }
 
   renderVerificationCodeInput() {
-    const { codeInput } = this.state;
+    const {codeInput} = this.state;
 
     return (
-      <View style={{ marginTop: 25, padding: 25 }}>
+      <View style={{marginTop: 25, padding: 25}}>
         <Text>Enter verification code below:</Text>
         <TextInput
           autoFocus
-          style={{ height: 40, marginTop: 15, marginBottom: 15 }}
-          onChangeText={value => this.setState({ codeInput: value })}
+          style={{height: 40, marginTop: 15, marginBottom: 15}}
+          onChangeText={value => this.setState({codeInput: value})}
           placeholder={'Code ... '}
           value={codeInput}
         />
@@ -340,7 +350,7 @@ export default class App extends Component {
       })
       .then(creds => {
         console.log('creds', creds);
-        this.setState({ creds });
+        this.setState({creds});
       })
       .catch(error => {
         console.log(error);
@@ -358,9 +368,9 @@ export default class App extends Component {
       })
       .then(creds => {
         if (creds) {
-          this.setState({ creds });
+          this.setState({creds});
         } else {
-          this.setState({ creds: null });
+          this.setState({creds: null});
         }
       })
       .catch(error => {
@@ -381,20 +391,20 @@ export default class App extends Component {
   }
 
   render() {
-    const { user, confirmResult } = this.state;
+    const {user, confirmResult} = this.state;
     return (
       <React.Fragment>
-        <View style={{ height: 44 }} />
+        <View style={{height: 44}} />
         <ScrollView style={styles.container}>
           <Button
             title="Facebook Login"
-            style={{ pading: 15 }}
+            style={{pading: 15}}
             onPress={this.facebookLogin}
           />
 
           <Button
             title="Google Login"
-            style={{ pading: 15 }}
+            style={{pading: 15}}
             onPress={this.googleLogin}
           />
 
@@ -420,10 +430,10 @@ export default class App extends Component {
                 flex: 1,
               }}>
               <Image
-                source={{ uri: successImageUri }}
-                style={{ width: 100, height: 100, marginBottom: 25 }}
+                source={{uri: successImageUri}}
+                style={{width: 100, height: 100, marginBottom: 25}}
               />
-              <Text style={{ fontSize: 25 }}>Signed In!</Text>
+              <Text style={{fontSize: 25}}>Signed In!</Text>
               <Text>{JSON.stringify(user)}</Text>
               <Button title="Sign Out" color="red" onPress={this.signOut} />
             </View>

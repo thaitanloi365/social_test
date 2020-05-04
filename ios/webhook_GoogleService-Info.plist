@@ -3,23 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>774438075456-fraucbikcvp6m77dbfu7f0ehuj9af99r.apps.googleusercontent.com</string>
+	<string>180370368538-k6gnf2o78pk1o9lq0b7gh2q10uh29ki9.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.774438075456-fraucbikcvp6m77dbfu7f0ehuj9af99r</string>
-	<key>ANDROID_CLIENT_ID</key>
-	<string>774438075456-gu8s70jrr4360nrrp3dnenujud4661gg.apps.googleusercontent.com</string>
+	<string>com.googleusercontent.apps.180370368538-k6gnf2o78pk1o9lq0b7gh2q10uh29ki9</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCpA1ltMKXqXombaAHsyWQRU5IokXQorBw</string>
+	<string>AIzaSyAPwKR4h2azF15l3hqfYrvblW0QcFaMpVg</string>
 	<key>GCM_SENDER_ID</key>
-	<string>774438075456</string>
+	<string>180370368538</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.northgate.haplo.dev</string>
+	<string>com.loi.socialtests</string>
 	<key>PROJECT_ID</key>
-	<string>haplo-dev</string>
+	<string>webhook-60569</string>
 	<key>STORAGE_BUCKET</key>
-	<string>haplo-dev.appspot.com</string>
+	<string>webhook-60569.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,8 +29,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:774438075456:ios:2af13bcbeb716484d073a5</string>
+	<string>1:180370368538:ios:e2fb5b2f78dcfdec0249a3</string>
 	<key>DATABASE_URL</key>
-	<string>https://haplo-dev.firebaseio.com</string>
+	<string>https://webhook-60569.firebaseio.com</string>
 </dict>
 </plist>
